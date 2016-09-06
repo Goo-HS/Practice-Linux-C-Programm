@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -24,24 +26,24 @@ int my_read(int fd)
 	/*获取文件长度并保持文件读写指针在文件开始处*/
 	if(lseek(fd, 0, SEEK_END) == -1)
 	{
-		my_err("lseek", _LINE_);
+		my_err("lseek", __LINE__);
 	}
 
 	if((len = lseek(fd, 0, SEEK_CUR)) == -1)
 	{
-		my_err("lseek", _LINE_);
+		my_err("lseek", __LINE__);
 	}
 
 	if(lseek(fd, 0, SEEK_SET) == -1)
 	{
-		my_err("lseek", _LINE_);
+		my_err("lseek", __LINE__);
 	}
 
 	printf("len:%d\n", len);
 	/*读数据*/
 	if((ret = read(fd, read_buf, len)) < 0)
 	{
-		my_err("read", _LINE_);
+		my_err("read", __LINE__);
 	}
 
 	/*打印数据*/
@@ -60,11 +62,11 @@ int main()
 	int fd;
 	char write_buf[32] = "Hello Ubantu!\r\n";
 
-	if((fd = open("test.txt", O_APPEND)) == -1)
+	if((fd = open("MyFile.txt", O_APPEND | O_RDWR)) == -1)
 	{
-		if((fd = creat("test.txt", S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
+		if((fd = creat("MyFile.txt", S_IRWXU | S_IRWXG | S_IRWXO | S_IREAD | S_IWRITE )) == -1)
 		{
-			my_err("open", _LINE_);
+			my_err("open", __LINE__);
 		}
 		else
 		{
@@ -73,13 +75,17 @@ int main()
 	}
 	else
 	{
+		if(lseek(fd, 0, SEEK_END) == -1)
+		{
+			my_err("lseek", __LINE__);
+		}
 		printf("open file success\r\n");
 	}
 
 	/*写数据*/
 	if(write(fd, write_buf, strlen(write_buf)) != strlen(write_buf))
 	{
-		my_err("write", _LINE_);
+		my_err("write", __LINE__);
 	}
 	my_read(fd);
 
@@ -87,11 +93,11 @@ int main()
 	printf("/*------------------------*/\n");
 	if(lseek(fd, 10, SEEK_END) == -1)
 	{
-		my_err("lseek", _LINE_);
+		my_err("lseek", __LINE__);
 	}
 	if(write(fd, write_buf, strlen(write_buf)) != strlen(write_buf))
 	{
-		my_err("write", _LINE_);
+		my_err("write", __LINE__);
 	}
 	my_read(fd);
 
