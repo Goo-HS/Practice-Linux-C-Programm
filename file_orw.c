@@ -21,7 +21,7 @@ int my_read(int fd)
 	int len;
 	int ret;
 	int i;
-	char read_buf[64];
+	char read_buf[256];
 
 	/*获取文件长度并保持文件读写指针在文件开始处*/
 	if(lseek(fd, 0, SEEK_END) == -1)
@@ -64,7 +64,7 @@ int main()
 
 	if((fd = open("MyFile.txt", O_APPEND | O_RDWR)) == -1)
 	{
-		if((fd = creat("MyFile.txt", S_IRWXU | S_IRWXG | S_IRWXO | S_IREAD | S_IWRITE )) == -1)
+		if((fd = open("MyFile.txt", O_CREAT | O_APPEND | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
 		{
 			my_err("open", __LINE__);
 		}
