@@ -20,9 +20,9 @@ int main()
 	int ret;
 	int access_mode;
 
-	if((fd = open("MyFile.txt", O_RDWR)) == -1)
+	if((fd = open("MyFile.txt", O_RDONLY)) == -1)
 	{
-		if((fd = open("MyFile.txt", O_CREAT | O_TRUNC | O_RDWR, S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
+		if((fd = open("MyFile.txt", O_CREAT | O_TRUNC | O_RDONLY, S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
 		{
 			my_err("open", __LINE__);
 		}
